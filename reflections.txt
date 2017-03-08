@@ -1,0 +1,13 @@
+Chapter : Intro to Neural Networks
+
+1. Linear regression is like a continuous problem. ex. finding housing prices based on data
+2. Logistic regression is like a discreet problem. Logistic = logic = discreet, get it?! ex. finding if a student will pass or fail
+3. Perceptron is the basic building block of a neural network. It's imitating the neurons in out brain.
+4. We can build the basic AND, OR & NOT gates with a perceptron. Hence basically can be used to build upon any complex logic like an XOR gate
+built using all three basic gates.
+5. A perceptron assigns weights and biasis to its inputs and creates an equation, which is nothing but a linear combination of its inputs
+to decide if its output should be a 0 or a 1
+6. A perceptron actually uses an activation function which decides if the output of that equation crosses a threshold or not and gives a 0 or 1
+7. A neural network basically tries to "learn" what inputs produce the desired outputs. How it learns is by relating the inputs to get the 
+desired outputs by tweaking or adjusting it's weights and biasis. That's it! That's what we call learning!
+8. 
