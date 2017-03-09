@@ -3,11 +3,18 @@ Chapter : Intro to Neural Networks
 1. Linear regression is like a continuous problem. ex. finding housing prices based on data
 2. Logistic regression is like a discreet problem. Logistic = logic = discreet, get it?! ex. finding if a student will pass or fail
 3. Perceptron is the basic building block of a neural network. It's imitating the neurons in out brain.
-4. We can build the basic AND, OR & NOT gates with a perceptron. Hence basically can be used to build upon any complex logic like an XOR gate
-built using all three basic gates.
-5. A perceptron assigns weights and biasis to its inputs and creates an equation, which is nothing but a linear combination of its inputs
+4. A perceptron assigns weights and biasis to its inputs and creates an equation, which is nothing but a linear combination of its inputs
 to decide if its output should be a 0 or a 1
+5. We can build the basic AND, OR & NOT gates with a perceptron. Hence basically it can be used to build upon any complex logic like an XOR gate
+built using all three basic gates, which is a linearly inseprable function.
 6. A perceptron actually uses an activation function which decides if the output of that equation crosses a threshold or not and gives a 0 or 1
 7. A neural network basically tries to "learn" what inputs produce the desired outputs. How it learns is by relating the inputs to get the 
 desired outputs by tweaking or adjusting it's weights and biasis. That's it! That's what we call learning!
-8. 
+8. The linear combination of the weights, inputs, and bias form the input, h which passes through the activation function f(h), giving the 
+final output of the perceptron,
+9. Given an input a NN produces an output. Hence it can be used to predict the outputs based on inputs given once it is trained.
+10. Training involves adjusting the weights of the NN so as to minimize the error between the predicted and the actual value of the output
+11. One of the method used to "turning the knobs" or training the network and adjusting the weights in the direction that minimizes the error 
+the most is Gradient Descent.
+12. The term 'Gradient' is nothing but a generalization of derivative for functions with more than 1 variable. ie. higher than 1 dimension derivatives are called
+gradients.
