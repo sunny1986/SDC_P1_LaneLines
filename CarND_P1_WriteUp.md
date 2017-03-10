@@ -89,6 +89,8 @@ Hough transform is applied using **hough\_lines()** function which calls **draw\
 
 10. Any conditions outside which the code has been trained on. Lots of parameters are fixed and for any situations outside these conditions the pipeline is prone to break.
 
+11. Not suitable for different weather conditions like rains, snow, etc.
+
 ###3. Suggest possible improvements to your pipeline
 
 1. In order to improve the 1st shortcoming, we can detect when there is a sharp turn. One way could be to find out when there is a reduction in the number of Hough lines below a certain threshold especially in regions close to the apex of the ROI. Also there will be Hough lines with slopes outside the slope limits. Once this is detected we can make our ROI to be dynamic by pulling the apex of ROI further down towards the bottom of the image

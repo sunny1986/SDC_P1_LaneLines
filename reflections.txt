@@ -18,3 +18,4 @@ final output of the perceptron,
 the most is Gradient Descent.
 12. The term 'Gradient' is nothing but a generalization of derivative for functions with more than 1 variable. ie. higher than 1 dimension derivatives are called
 gradients.
+13. So to work with matrices use Python library numpy
