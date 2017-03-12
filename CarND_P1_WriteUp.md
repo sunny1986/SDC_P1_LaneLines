@@ -60,9 +60,11 @@ Hough transform is applied using **hough\_lines()** function which calls **draw\
 
 * Slopes and centers of these filtered lines were stored 
 
-* Average slopes and intercepts for these lines were calculated
+* Average slopes and intercepts for these lines were calculate
 
 * Further testing also made sense to filter out the intercepts which did not make sense while calcuating average intercepts
+
+* Used historical values for frame-to-frame smoothing otherwise jumps in average slopes and intercepts from one frame to another will cause the annotated L & R lanes to be jittery.
 
 * Having information on average slope, centers and intercepts for left and right lanes, the function returns two parameters : pos_line and neg_line. These lines are basically points that are returned to the **hough\_lines** function that draws the 2 solid lines on left and right lanes.
 
@@ -75,21 +77,19 @@ Hough transform is applied using **hough\_lines()** function which calls **draw\
 
 3. When lighting conditions change drastically like on a bright sunny day and then the car drives through an underpass or the weather is patchy with clouds and sunshine
 
-4. Also like seen in the challenge video, the pipeline seems to sturggle where there are variations in lighting. 
+4. Also changes in the color of the road varying while transitioning from driving on the road to driving on a bridge which is mostly made up of concrete and is lighter in shade compared to road
 
-5. Also changes in the color of the road varying while transitioning from driving on the road to driving on a bridge which is mostly made up of concrete and is lighter in shade compared to road
+5. Not suitable for night driving
 
-6. Not suitable for night driving
+6. No vehicle should be in front occluding the lanes
 
-7. No vehicle should be in front occluding the lanes
+7. At intersections the pipeline might not function well since it might not see any lanes
 
-8. At intersections the pipeline might not function well since it might not see any lanes
+8. For portions of driving when lane changes occur, the pipeline will perform poorly
 
-9. For portions of driving when lane changes occur, the pipeline will perform poorly
+9. Any conditions outside which the code has been trained on. Lots of parameters are fixed and for any situations outside these conditions the pipeline is prone to break.
 
-10. Any conditions outside which the code has been trained on. Lots of parameters are fixed and for any situations outside these conditions the pipeline is prone to break.
-
-11. Not suitable for different weather conditions like rains, snow, etc.
+10. Not suitable for different weather conditions like rains, snow, etc.
 
 ###3. Suggest possible improvements to your pipeline
 
@@ -97,8 +97,6 @@ Hough transform is applied using **hough\_lines()** function which calls **draw\
 
 2. Lot of improvements can be done if the parameters and ROI is dynamic based on the situations
 
-3. Also using historical values for lane detection will help in situations when some frames detect no lanes at all. But this will not help when there are no lanes at all on the road
+3. Improvements may also include vehicle tracking as well if there is one in front which is occluding the lanes.
 
-4. Improvements may also include vehicle tracking as well if there is one in front which is occluding the lanes.
-
-5. Further tuning of pipeline can be done for drastically different conditions in lighting, color of lanes, roads, etc. But it can only be limited since the space of variations in much larger than what can be spanned by the information from a camera, thereby requiring other sensory inputs
+4. Further tuning of pipeline can be done for drastically different conditions in lighting, color of lanes, roads, etc. But it can only be limited since the space of variations in much larger than what can be spanned by the information from a camera, thereby requiring other sensory inputs
