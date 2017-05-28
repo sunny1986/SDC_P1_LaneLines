@@ -32,7 +32,7 @@ Final submissions of the project include:
 
 ---
 
-##### Results
+#### Results
 
 For lane finding for an easier video stream [here](https://youtu.be/Th5x-Cewutg) are the results.
 
@@ -68,9 +68,9 @@ Hough transform is applied using **hough\_lines()** function which calls **draw\
 
 * Slopes and centers of these filtered lines were stored 
 
-* Average slopes and intercepts for these lines were calculate
+* Average slopes and intercepts for these lines were calculated
 
-* Further testing also made sense to filter out the intercepts which did not make sense while calcuating average intercepts
+* Further testing also made sense to filter out the intercepts which seemed unreasonable to where the lines should be in the frame
 
 * Used historical values for frame-to-frame smoothing otherwise jumps in average slopes and intercepts from one frame to another will cause the annotated L & R lanes to be jittery.
 
