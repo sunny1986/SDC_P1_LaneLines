@@ -1,102 +1,106 @@
-#**Finding Lane Lines on the Road** 
-[![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
+### Project 1: Finding Lane Lines on the Road
 
-<img src="laneLines_thirdPass.jpg" width="480" alt="Combined Image" />
-
-Overview
 ---
+
+**Finding Lane Lines on the Road**
+
 
 When we drive, we use our eyes to decide where to go.  The lines on the road that show us where the lanes are act as our constant reference for where to steer the vehicle.  Naturally, one of the first things we would like to do in developing a self-driving car is to automatically detect lane lines using an algorithm.
 
-In this project you will detect lane lines in images using Python and OpenCV.  OpenCV means "Open-Source Computer Vision", which is a package that has many useful tools for analyzing images.  
+The goals / steps of this project are the following:
 
-To complete the project, two files will be submitted: a file containing project code and a file containing a brief write up explaining your solution. We have included template files to be used both for the [code](https://github.com/udacity/CarND-LaneLines-P1/blob/master/P1.ipynb) and the [writeup](https://github.com/udacity/CarND-LaneLines-P1/blob/master/writeup_template.md).The code file is called P1.ipynb and the writeup template is writeup_template.md 
+In this project we have to identify lane lines on the road using some of the helper functions provided with the project. We start with developing a pipeline on a series of individual images, and later apply the result to a video stream. Once we have this worked out, the next big part is to contribute to the **draw\_lines()** function and try to average and/or extrapolate the line segments we've detected to map out the full extent of the lane lines. The output of the project is an annotated version of the input video stream shown by 2 solid lines annotating the left and right lanes throughout most of the video
 
-To meet specifications in the project, take a look at the requirements in the [project rubric](https://review.udacity.com/#!/rubrics/322/view)
+Final submissions of the project include:
+
+* Code: Make a pipeline that finds lane lines on the road
+* Write up: Reflect on your work in a written report
 
 
-Creating a Great Writeup
+
+[//]: # (Image References)
+
+[image1]: ./examples/grayscale.jpg "Grayscale"
+[image2]: ./examples/image2.jpg "Image"
+[image3]: ./examples/Y_img.jpg "Yellow image"
+[image4]: ./examples/W_img.jpg "White image"
+[image5]: ./examples/combined.jpg "Combined image"
+[image6]: ./examples/canny.jpg "Canny"
+[image7]: ./examples/canny_ROI.jpg "Canny ROI"
+[image8]: ./examples/line_image.jpg "Line Image"
+[image9]: ./examples/final_image.jpg "Final Image"
+
 ---
-For this project, a great writeup should provide a detailed response to the "Reflection" section of the [project rubric](https://review.udacity.com/#!/rubrics/322/view). There are three parts to the reflection:
-1. Describe the pipeline
-2. Identify any shortcomings
-3. Suggest possible improvements
 
-We encourage using images in your writeup to demonstrate how your pipeline works.  
+### Reflection
 
-All that said, please be concise!  We're not looking for you to write a book here: just a brief description.
+##### Pipeline description
 
-You're not required to use markdown for your writeup.  If you use another method please just submit a pdf of your writeup. Here is a link to a [writeup template file](https://github.com/udacity/CarND-LaneLines-P1/blob/master/writeup_template.md). 
+My pipeline consisted of following steps:
+
+* Read an image/frame from a video and get rid of noise and smoothen the image using Gaussian filter
+
+![alt text][image2]
+
+* Convert from RGB to HSV color space to filter out into images with yellow lane (1st image) and white lane (2nd image) markings and combine both (3rd image)
+
+![alt text][image3] ![alt text][image4] ![alt text][image5]
+
+* Apply Canny on the combined image to find all edges (1st image) and then filter the only ones within the ROI (2nd image)
+
+![alt text][image6] ![alt text][image7]
+
+* Apply Hough transform to find lines in the image (1st image) and then combine (2nd image) the found lines with the originial image frame
+
+![alt text][image8] ![alt text][image9]
+
+Hough transform is applied using **hough\_lines()** function which calls **draw\_lines()** function to draw lines on the image frames. A good portion of the project is dedicated to modifying the **draw\_lines()** function to annotate the resulting video with 2 solid lines on top of left and right lanes.
+
+##### Breakdown of draw\_lanes() function
+
+* The function mainly receives the image frame and the Hough lines as parameters. Looping through these lines we calculate slopes and find the centers of each line
+
+* In the next step we filter these lines on the basis of slopes that make sense, getting rid of outliers like horizontal lines or vertical lines. Further testing on videos gave me a range of valid limits for slopes.
+
+* Slopes and centers of these filtered lines were stored 
+
+* Average slopes and intercepts for these lines were calculate
+
+* Further testing also made sense to filter out the intercepts which did not make sense while calcuating average intercepts
+
+* Used historical values for frame-to-frame smoothing otherwise jumps in average slopes and intercepts from one frame to another will cause the annotated L & R lanes to be jittery.
+
+* Having information on average slope, centers and intercepts for left and right lanes, the function returns two parameters : pos_line and neg_line. These lines are basically points that are returned to the **hough\_lines** function that draws the 2 solid lines on left and right lanes.
 
 
-The Project
----
+##### Potential shortcomings with the current pipeline
 
-## If you have already installed the [CarND Term1 Starter Kit](https://github.com/udacity/CarND-Term1-Starter-Kit/blob/master/README.md) you should be good to go!   If not, you can install the starter kit or follow the install instructions below to get started on this project. ##
+1. In draw\_lines() function we filter the Hough lines based on a range of slope values which are fixed. Hence the code might break when the car travels through sharp turns as the lanes have a much steeper slope.
 
-**Step 1:** Getting setup with Python
+2. Another shortcoming would be code performance to drop a lot when there are no lane markings on the road, eg. in a street. 
 
-To do this project, you will need Python 3 along with the numpy, matplotlib, and OpenCV libraries, as well as Jupyter Notebook installed. 
+3. When lighting conditions change drastically like on a bright sunny day and then the car drives through an underpass or the weather is patchy with clouds and sunshine
 
-We recommend downloading and installing the Anaconda Python 3 distribution from Continuum Analytics because it comes prepackaged with many of the Python dependencies you will need for this and future projects, makes it easy to install OpenCV, and includes Jupyter Notebook.  Beyond that, it is one of the most common Python distributions used in data analytics and machine learning, so a great choice if you're getting started in the field.
+4. Also changes in the color of the road varying while transitioning from driving on the road to driving on a bridge which is mostly made up of concrete and is lighter in shade compared to road
 
-Choose the appropriate Python 3 Anaconda install package for your operating system <A HREF="https://www.continuum.io/downloads" target="_blank">here</A>.   Download and install the package.
+5. Not suitable for night driving
 
-If you already have Anaconda for Python 2 installed, you can create a separate environment for Python 3 and all the appropriate dependencies with the following command:
+6. No vehicle should be in front occluding the lanes
 
-`>  conda create --name=yourNewEnvironment python=3 anaconda`
+7. At intersections the pipeline might not function well since it might not see any lanes
 
-`>  source activate yourNewEnvironment`
+8. For portions of driving when lane changes occur, the pipeline will perform poorly
 
-**Step 2:** Installing OpenCV
+9. Any conditions outside which the code has been trained on. Lots of parameters are fixed and for any situations outside these conditions the pipeline is prone to break.
 
-Once you have Anaconda installed, first double check you are in your Python 3 environment:
+10. Not suitable for different weather conditions like rains, snow, etc.
 
-`>python`    
-`Python 3.5.2 |Anaconda 4.1.1 (x86_64)| (default, Jul  2 2016, 17:52:12)`  
-`[GCC 4.2.1 Compatible Apple LLVM 4.2 (clang-425.0.28)] on darwin`  
-`Type "help", "copyright", "credits" or "license" for more information.`  
-`>>>`   
-(Ctrl-d to exit Python)
+##### Possible Improvements to the current pipeline
 
-run the following commands at the terminal prompt to get OpenCV:
+1. In order to improve the 1st shortcoming, we can detect when there is a sharp turn. One way could be to find out when there is a reduction in the number of Hough lines below a certain threshold especially in regions close to the apex of the ROI. Also there will be Hough lines with slopes outside the slope limits. Once this is detected we can make our ROI to be dynamic by pulling the apex of ROI further down towards the bottom of the image
 
-`> pip install pillow`  
-`> conda install -c menpo opencv3=3.1.0`
+2. Lot of improvements can be done if the parameters and ROI is dynamic based on the situations
 
-then to test if OpenCV is installed correctly:
+3. Improvements may also include vehicle tracking as well if there is one in front which is occluding the lanes.
 
-`> python`  
-`>>> import cv2`  
-`>>>`  (i.e. did not get an ImportError)
-
-(Ctrl-d to exit Python)
-
-**Step 3:** Installing moviepy  
-
-We recommend the "moviepy" package for processing video in this project (though you're welcome to use other packages if you prefer).  
-
-To install moviepy run:
-
-`>pip install moviepy`  
-
-and check that the install worked:
-
-`>python`  
-`>>>import moviepy`  
-`>>>`  (i.e. did not get an ImportError)
-
-(Ctrl-d to exit Python)
-
-**Step 4:** Opening the code in a Jupyter Notebook
-
-You will complete this project in a Jupyter notebook.  If you are unfamiliar with Jupyter Notebooks, check out <A HREF="https://www.packtpub.com/books/content/basics-jupyter-notebook-and-python" target="_blank">Cyrille Rossant's Basics of Jupyter Notebook and Python</A> to get started.
-
-Jupyter is an ipython notebook where you can run blocks of code and see results interactively.  All the code for this project is contained in a Jupyter notebook. To start Jupyter in your browser, run the following command at the terminal prompt (be sure you're in your Python 3 environment!):
-
-`> jupyter notebook`
-
-A browser window will appear showing the contents of the current directory.  Click on the file called "P1.ipynb".  Another browser window will appear displaying the notebook.  Follow the instructions in the notebook to complete the project.  
-
-**Step 5:** Complete the project and submit both the Ipython notebook and the project writeup
-
+4. Further tuning of pipeline can be done for drastically different conditions in lighting, color of lanes, roads, etc. But it can only be limited since the space of variations in much larger than what can be spanned by the information from a camera, thereby requiring other sensory inputs
